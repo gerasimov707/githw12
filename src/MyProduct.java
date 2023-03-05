@@ -1,4 +1,6 @@
-public class MyProduct {
+import java.io.Serializable;
+
+public class MyProduct implements Serializable {
 
     public MyProduct(String title, int amount, int price) {
         this.title = title;

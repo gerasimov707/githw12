@@ -11,9 +11,9 @@ public class Main {
         products.add(new Product("Яблоки", 100));
         products.add(new Product("Молоко", 250));
 
-        File file = new File("src/main/java/org/example/txt/basket.txt");
+        File file = new File("src/main/java/org/example/bin/basket.bin");
         Basket basket;
-        basket = Objects.requireNonNullElseGet(Basket.loadFromTxtFile(file, products), () -> new Basket(products));
+        basket = Objects.requireNonNullElseGet(Basket.loadFromBinFile(file, products), () -> new Basket(products));
 
         Scanner scanner;
         label:
@@ -23,7 +23,7 @@ public class Main {
             String answer = scanner.nextLine();
             switch (answer) {
                 case "end":
-                    basket.saveTxt(file);
+                    basket.saveBin(file);
                     break label;
                 case "print":
                     basket.printCart();

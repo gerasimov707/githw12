@@ -4,7 +4,6 @@ public class Product {
         this.price = price;
         this.title = title;
     }
-
     private String title;
     private int price;
 

@@ -13,8 +13,8 @@ public class Main {
 
         File file = new File("src/main/java/org/example/bin/basket.bin");
         Basket basket;
-        basket = Objects.requireNonNullElseGet(Basket.loadFromBinFile(file, products), () -> new Basket(products));
-
+        basket = Objects.requireNonNullElseGet(Basket.loadFromBinFile(file), () -> new Basket(products));
+        basket.setProducts(products);
         Scanner scanner;
         label:
         while (true) {

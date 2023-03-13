@@ -9,6 +9,10 @@ public class Basket {
 
     private transient List<Product> products;
 
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
     private List<MyProduct> myProducts;
 
     public Basket(List<Product> products) {
@@ -60,7 +64,7 @@ public class Basket {
         }
     }
 
-    public static Basket loadFromTxtFile(File txtFile,List<Product> products) {
+    public static Basket loadFromTxtFile(File txtFile) {
         try (BufferedReader br
                      = new BufferedReader(new FileReader(txtFile))) {
             String[] myProducts = br.readLine().split("\\$");
@@ -69,7 +73,7 @@ public class Basket {
                 String[] product = prod.split(" ");
                 list.add(new MyProduct(product[0],Integer.parseInt(product[1]),Integer.parseInt(product[2])));
             }
-            Basket basket = new Basket(products);
+            Basket basket = new Basket(new ArrayList<>());
             basket.setMyProducts(list);
             return basket;
         } catch (Exception e) {

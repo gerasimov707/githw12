@@ -6,14 +6,14 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        ClientLog clientLog = new ClientLog();
         List<Product> products = new ArrayList<>();
         products.add(new Product("Хлеб", 40));
         products.add(new Product("Яблоки", 100));
         products.add(new Product("Молоко", 250));
 
-        File file = new File("src/main/java/org/example/txt/basket.txt");
-        Basket basket;
-        basket = Objects.requireNonNullElseGet(Basket.loadFromTxtFile(file), () -> new Basket(products));
+        File file = new File("basket.json");
+        Basket basket = Objects.requireNonNullElseGet(Basket.loadFromJsonFile(file), () -> new Basket(products));
         basket.setProducts(products);
         Scanner scanner;
         label:
@@ -23,7 +23,8 @@ public class Main {
             String answer = scanner.nextLine();
             switch (answer) {
                 case "end":
-                    basket.saveTxt(file);
+                    basket.saveJson(file);
+                    clientLog.exportAsCSV(new File("log.csv"));
                     break label;
                 case "print":
                     basket.printCart();
@@ -36,6 +37,7 @@ public class Main {
                     break;
                 default:
                     String[] strings = answer.split(" ");
+                    clientLog.log(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]));
                     basket.addToCart(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]));
                     break;
             }

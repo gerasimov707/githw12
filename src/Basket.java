@@ -1,7 +1,8 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,6 @@ public class Basket {
             );
         }
     }
-
     public void printCart() {
         for (MyProduct myProduct : myProducts) {
             System.out.println(myProduct.getTitle() + " " + myProduct.getAmount() + " штук " + myProduct.getPrice() + "руб/шт " + myProduct.getAmount() * myProduct.getPrice() + " руб сумма");
@@ -84,4 +84,51 @@ public class Basket {
     public void setMyProducts(List<MyProduct> myProducts) {
         this.myProducts = myProducts;
     }
+    public void saveJson(File txtFile) {
+        JSONObject obj = new JSONObject();
+        JSONArray products = new JSONArray();
+        for (MyProduct myProduct: myProducts){
+            JSONObject obj2 = new JSONObject();
+            obj2.put("title",myProduct.getTitle());
+            obj2.put("price",String.valueOf(myProduct.getPrice()));
+            obj2.put("amount",String.valueOf(myProduct.getAmount()));
+            products.add(obj2);
+        }
+        obj.put("products", products);
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(txtFile.getPath());
+            fileWriter.write(obj.toJSONString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                fileWriter.flush();
+                fileWriter.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    public static Basket loadFromJsonFile(File txtFile) {
+        JSONParser parser = new JSONParser();
+        List<MyProduct> list = new ArrayList<>();
+        try {
+            Object obj = parser.parse(new FileReader(txtFile.getPath()));
+            JSONObject jsonObject =  (JSONObject) obj;
+
+            JSONArray products1 = (JSONArray) jsonObject.get("products");
+            for (JSONObject jsonObject1 : (Iterable<JSONObject>) products1) {
+                list.add(new MyProduct(jsonObject1.get("title").toString(), Integer.parseInt(jsonObject1.get("amount").toString()), Integer.parseInt(jsonObject1.get("price").toString())));
+            }
+            Basket basket = new Basket(new ArrayList<>());
+            basket.setMyProducts(list);
+            return basket;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 }
+
